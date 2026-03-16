@@ -1,62 +1,137 @@
-🏟️ Arena Connect: Gestão de Eventos & Engajamento
-O Arena Connect é uma solução robusta para a gestão de grandes complexos de eventos. Desenvolvido em Java com Spring Boot, o sistema permite que cidadãos acompanhem a agenda da Arena, confirmem presença e sugiram novos eventos, enquanto oferece aos administradores um painel de controle estratégico com métricas e curadoria de conteúdo.
+🏟️ Arena Connect
+Gestão de Eventos & Engajamento para Grandes Arenas
+<p align="center"> Sistema desenvolvido para **gerenciamento inteligente de eventos**, permitindo interação entre **cidadãos e administradores** de um complexo de eventos. </p>
+📌 Sobre o Projeto
 
-📖 Funcionalidades (User Stories)
-O projeto foi construído para atender aos seguintes requisitos de negócio:
+💡 Arena Connect é uma solução robusta para a gestão de eventos em grandes arenas e centros de convenções.
 
+O sistema permite que cidadãos acompanhem eventos, confirmem presença e sugiram novas atividades, enquanto administradores gerenciam toda a agenda através de um painel estratégico com métricas e curadoria de conteúdo.
+
+A aplicação foi construída utilizando Java e Spring Boot, seguindo boas práticas de arquitetura em camadas e desenvolvimento de APIs REST.
+
+🚀 Funcionalidades
 👤 Área do Cidadão
-Catálogo de Eventos: Visualização de eventos futuros com detalhes completos (data, categoria e descrição).
+📅 Catálogo de Eventos
 
-Filtros Dinâmicos: Busca por categorias como Esportes, Shows, Cultural e Corporativo.
+Visualização de eventos futuros com informações completas:
 
-Reserva de Vagas (RSVP): Confirmação de participação com atualização automática da capacidade do evento.
+Data
 
-Interatividade: Canal para sugestão de novos eventos e agendamento de visitas guiadas à Arena.
+Categoria
+
+Descrição detalhada
+
+🔎 Filtros Dinâmicos
+
+Busca rápida por categorias de eventos:
+
+⚽ Esportes
+
+🎤 Shows
+
+🎭 Cultural
+
+🏢 Corporativo
+
+🎟️ Reserva de Vagas (RSVP)
+
+Os usuários podem confirmar presença em eventos.
+
+✔ Atualização automática da capacidade disponível
+✔ Controle de vagas em tempo real
+
+💬 Interatividade com a Arena
+
+O cidadão pode:
+
+Sugerir novos eventos
+
+Solicitar visitas guiadas à Arena
 
 🔑 Painel Administrativo
-CRUD de Eventos: Cadastro, edição e atualização de informações dos eventos.
+📋 CRUD de Eventos
 
-Dashboard Estatístico: Visualização de total de eventos, média de público e categorias mais populares.
+Os administradores podem:
 
-Gestão de Sugestões: Fluxo de aprovação ou descarte de ideias enviadas pela comunidade.
+✔ Criar eventos
+✔ Editar informações
+✔ Atualizar dados
+✔ Gerenciar agenda completa da Arena
 
-🎨 Design & UX
-O protótipo visual foi desenhado com foco em usabilidade e pode ser acessado através do link abaixo:
+📊 Dashboard Estatístico
 
-🔗 Acesse o Protótipo no Figma
+Painel com indicadores importantes como:
 
-<img width="1894" height="906" alt="image" src="https://github.com/user-attachments/assets/aa1a7f5f-99cc-4940-a306-9d98247ef792" />
+📅 Total de eventos cadastrados
 
+👥 Média de público
 
-🛠️ Stack Técnica
-Linguagem: Java 17+
+📈 Categorias mais populares
 
-Framework Principal: Spring Boot 3
+💡 Gestão de Sugestões
 
-Persistência de Dados: Spring Data JPA
+Sistema para analisar sugestões enviadas pela comunidade.
 
-Banco de Dados: ...
+Os administradores podem:
 
-Gerenciador de Dependências: Maven
+✔ Aprovar sugestões
+✔ Rejeitar ideias
+✔ Transformar sugestões em novos eventos
 
-Arquitetura: REST API com separação de camadas (Controller, Service, Repository).
+🎨 Design & Experiência do Usuário
 
-🚀 Como Rodar o Projeto
-Clone o repositório:
+O protótipo visual do sistema foi desenvolvido com foco em usabilidade e experiência do usuário (UX).
 
-Bash
+🔗 Acesse o protótipo no Figma
 
+https://cold-target-85807250.figma.site/home
+🛠️ Stack Tecnológica
+Backend
+Tecnologia	Descrição
+Java 17+	Linguagem principal
+Spring Boot 3	Framework backend
+Spring Data JPA	Persistência de dados
+REST API	Comunicação entre sistemas
+Banco de Dados
+Tecnologia	Uso
+MySQL / PostgreSQL (definir)	Armazenamento dos dados
+Ferramentas
+Ferramenta	Uso
+Maven	Gerenciamento de dependências
+Git / GitHub	Controle de versão
+Figma	Prototipação de interface
+🧱 Arquitetura do Projeto
+
+O sistema segue o padrão de arquitetura em camadas, amplamente utilizado em aplicações Spring Boot.
+
+Controller
+   ↓
+Service
+   ↓
+Repository
+   ↓
+Database
+📂 Estrutura
+src
+ ┣ controller
+ ┣ service
+ ┣ repository
+ ┣ model
+ ┗ dto
+⚙️ Como Rodar o Projeto
+1️⃣ Clone o repositório
 git clone https://github.com/seu-usuario/arena-connect.git
-Entre na pasta do projeto:
-
-Bash
-
+2️⃣ Acesse a pasta do projeto
 cd arena-connect
-Certifique-se de ter o Maven instalado e execute:
+3️⃣ Instale as dependências
 
-Bash
+Certifique-se de que o Maven esteja instalado.
 
 mvn clean install
+4️⃣ Execute a aplicação
 mvn spring-boot:run
-Acesse a aplicação:
-A API estará rodando em http://localhost:8080.
+🌐 Acesse a API
+
+A aplicação estará disponível em:
+
+http://localhost:8080
