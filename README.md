@@ -13,7 +13,7 @@ Nesta primeira etapa, focamos na definição do escopo, mapeamento das necessida
 
 ### 1. Documentação de Negócio
 * **Backlog do Produto:** [Acesse o Google Docs](https://docs.google.com/document/d/1fHHdMvh4ezyT2cgZMGVdHDAEMCshl091lF6qxCRIG8Y/edit?usp=sharing)
-* **Histórias de Usuário (BDD):** [Acesse o Google Docs](https://docs.google.com/document/d/1v4cqBuoQtQ7FU3iK1RnZapwKdjf0uxRvUNpRWDNyZmY/edit?usp=sharing)
+* **Histórias de Usuário (BDD):** [Acesse o Google Docs](https://docs.google.com/document/d/1rNh6yjRiOeY_gCbTfAXizIdN77B5HpMKccM51h26qmo/edit?usp=sharing)
     * *Inclui cenários de validação (Dado/Quando/Então) para o mínimo de 7 histórias exigidas.*
 
 ### 2. Prototipagem (Lo-Fi)
