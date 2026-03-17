@@ -18,7 +18,7 @@ Nesta primeira etapa, focamos na definição do escopo, mapeamento das necessida
 
 ### 2. Prototipagem (Lo-Fi)
 * **Protótipo Interativo (Figma):** [Clique para navegar no Figma](https://cold-target-85807250.figma.site/)
-* **Screencast de Apresentação:** [Assista ao vídeo demonstrativo](https://youtu.be/QGDoD0NFdiA)
+* **Screencast de Apresentação:** [Assista ao vídeo demonstrativo](https://youtu.be/EOYhhS9HprU)
     * *O vídeo apresenta o fluxo de 5 histórias principais do usuário.*
 
 
