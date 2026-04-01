@@ -24,22 +24,22 @@ public class EventoController {
         this.service = service;
     }
 
-    // GET /eventos — lista todos os eventos
+    //lista todos os eventos
     @GetMapping
     public List<Evento> listar() {
         return service.listarEventos();
     }
 
-    // Corrigido: GET /eventos/{id} — busca um evento pelo id
+    //busca um evento pelo id
     @GetMapping("/{id}")
     public Evento buscarPorId(@PathVariable Long id) {
         return service.buscarPorId(id);
     }
 
-    // Corrigido: POST /eventos — cria um novo evento
-    // NÃO mande o "id" no JSON, o banco gera automaticamente!
+    //cria um novo evento
+    
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED) // Retorna 201 Created em vez de 200
+    @ResponseStatus(HttpStatus.CREATED)
     public Evento criar(@RequestBody Evento evento) {
         return service.criarEvento(evento);
     }

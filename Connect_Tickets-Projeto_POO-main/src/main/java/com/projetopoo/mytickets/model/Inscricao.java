@@ -14,11 +14,10 @@ import jakarta.persistence.ManyToOne;
 public class Inscricao {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // O banco gera o id, não mande no JSON
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private Long id;
 
-    // @JsonIgnoreProperties evita loop infinito na hora de converter para JSON.
-    // Sem isso, Inscricao -> Usuario -> lista de inscricoes -> Inscricao -> ... (loop!)
+    
     @ManyToOne
     @JsonIgnoreProperties("inscricoes")
     private Usuario usuario;
@@ -29,7 +28,7 @@ public class Inscricao {
 
     private LocalDate dataInscricao;
 
-    // Construtor vazio obrigatório para o JPA funcionar
+   
     public Inscricao() {
     }
 

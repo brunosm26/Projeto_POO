@@ -11,7 +11,7 @@ import jakarta.persistence.Id;
 public class Evento {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // O banco gera o id, não mande no JSON
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private Long id;
 
     private String nome;
@@ -20,13 +20,13 @@ public class Evento {
     private String tipo;
     private int capacidade;
 
-    // Construtor vazio obrigatório para o JPA funcionar
+    
     public Evento() {
     }
 
     public Long getId() { return id; }
 
-    // Sem setId() — id não pode ser alterado manualmente
+    
 
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }

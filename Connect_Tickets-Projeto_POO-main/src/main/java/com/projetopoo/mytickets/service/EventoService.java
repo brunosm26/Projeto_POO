@@ -21,13 +21,13 @@ public class EventoService {
         return repository.findAll();
     }
 
-    // Corrigido: busca um evento pelo id, lança erro se não encontrar
+    //busca um evento pelo id, lança erro se não encontrar
     public Evento buscarPorId(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Evento não encontrado com id: " + id));
     }
 
-    // Corrigido: salva um novo evento no banco
+    //salva um novo evento no banco
     public Evento criarEvento(Evento evento) {
         return repository.save(evento);
     }

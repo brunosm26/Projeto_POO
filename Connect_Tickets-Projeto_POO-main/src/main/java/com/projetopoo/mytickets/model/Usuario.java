@@ -9,13 +9,13 @@ import jakarta.persistence.Id;
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // O banco gera o id automaticamente, não mande no JSON!
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private Long id;
 
     private String nome;
     private String email;
 
-    // Construtor vazio obrigatório para o JPA funcionar
+   
     public Usuario() {
     }
 
@@ -23,7 +23,7 @@ public class Usuario {
         return id;
     }
 
-    // Sem setId() — id não pode ser alterado manualmente
+
 
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }

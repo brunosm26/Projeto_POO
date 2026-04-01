@@ -16,17 +16,17 @@ public class UsuarioService {
         this.repository = repository;
     }
 
-    // Cria e salva um novo usuário no banco
+    
     public Usuario criarUsuario(Usuario usuario) {
         return repository.save(usuario);
     }
 
-    // Retorna todos os usuários cadastrados
+    
     public List<Usuario> listarUsuarios() {
         return repository.findAll();
     }
 
-    // Corrigido: busca um usuário pelo id, lança erro se não encontrar
+    
     public Usuario buscarPorId(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + id));
