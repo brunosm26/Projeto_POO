@@ -3,7 +3,9 @@ package com.projetopoo.mytickets.controller;
 import com.projetopoo.mytickets.model.DTOs.AuthRequest;
 import com.projetopoo.mytickets.model.DTOs.RegisterRequest;
 import com.projetopoo.mytickets.model.DTOs.TokenResponse;
+import com.projetopoo.mytickets.model.DTOs.UsuarioResponse;
 import com.projetopoo.mytickets.model.Usuario;
+import com.projetopoo.mytickets.model.enums.Role;
 import com.projetopoo.mytickets.repository.UsuarioRepository;
 import com.projetopoo.mytickets.security.CustomUserDetails;
 import com.projetopoo.mytickets.security.TokenService;
@@ -45,7 +47,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Usuario> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<UsuarioResponse> register(@RequestBody RegisterRequest request) {
         if (usuarioRepository.findByEmail(request.email()).isPresent()) {
             return ResponseEntity.badRequest().build();
         }
@@ -54,10 +56,15 @@ public class AuthController {
         novoUsuario.setNome(request.nome());
         novoUsuario.setEmail(request.email());
         novoUsuario.setUsername(request.username());
-        novoUsuario.setIsAdmin(request.isAdmin() != null ? request.isAdmin() : false);
+        novoUsuario.setRole(Role.USER);
         novoUsuario.setPasswordHash(passwordEncoder.encode(request.password()));
 
         Usuario savedUser = usuarioRepository.save(novoUsuario);
-        return ResponseEntity.ok(savedUser);
+        return ResponseEntity.ok(new UsuarioResponse(
+                savedUser.getId(),
+                savedUser.getNome(),
+                savedUser.getEmail(),
+                savedUser.getUsername()
+        ));
     }
 }
