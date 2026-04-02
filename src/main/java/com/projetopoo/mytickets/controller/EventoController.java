@@ -24,20 +24,16 @@ public class EventoController {
         this.service = service;
     }
 
-    //lista todos os eventos
     @GetMapping
     public List<Evento> listar() {
         return service.listarEventos();
     }
 
-    //busca um evento pelo id
     @GetMapping("/{id}")
     public Evento buscarPorId(@PathVariable Long id) {
         return service.buscarPorId(id);
     }
 
-    //cria um novo evento
-    
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Evento criar(@RequestBody Evento evento) {

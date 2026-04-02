@@ -24,22 +24,17 @@ public class UsuarioController {
         this.service = service;
     }
 
-    // POST /usuarios — cria um novo usuário
-    // Mande só: { "nome": "Bruno", "email": "bruno@email.com" }
-    // NÃO mande o "id" no JSON, o banco gera automaticamente!
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED) // Corrigido: retorna 201 Created em vez de 200
+    @ResponseStatus(HttpStatus.CREATED)
     public Usuario criar(@RequestBody Usuario usuario) {
         return service.criarUsuario(usuario);
     }
 
-    // GET /usuarios — lista todos os usuários
     @GetMapping
     public List<Usuario> listar() {
         return service.listarUsuarios();
     }
 
-    // Corrigido: GET /usuarios/{id} — busca um usuário pelo id
     @GetMapping("/{id}")
     public Usuario buscarPorId(@PathVariable Long id) {
         return service.buscarPorId(id);

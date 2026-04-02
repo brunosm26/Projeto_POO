@@ -24,18 +24,14 @@ public class InscricaoController {
         this.service = service;
     }
 
-    // POST /inscricoes?usuarioId=1&eventoId=2 — inscreve um usuário em um evento
-    // A lógica de lotação (capacidade) já é verificada no InscricaoService
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED) // Corrigido: retorna 201 Created em vez de 200
+    @ResponseStatus(HttpStatus.CREATED)
     public Inscricao inscrever(
             @RequestParam Long usuarioId,
-            @RequestParam Long eventoId
-    ) {
+            @RequestParam Long eventoId) {
         return service.inscrever(usuarioId, eventoId);
     }
 
-    // GET /inscricoes/usuario/{id} — lista todas as inscrições de um usuário
     @GetMapping("/usuario/{id}")
     public List<Inscricao> listar(@PathVariable Long id) {
         return service.listarPorUsuario(id);

@@ -1,6 +1,6 @@
 package com.projetopoo.mytickets.service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -19,11 +19,9 @@ public class InscricaoService {
     private final UsuarioRepository usuarioRepository;
     private final EventoRepository eventoRepository;
 
-    public InscricaoService(
-            InscricaoRepository inscricaoRepository,
+    public InscricaoService(InscricaoRepository inscricaoRepository,
             UsuarioRepository usuarioRepository,
-            EventoRepository eventoRepository
-    ) {
+            EventoRepository eventoRepository) {
         this.inscricaoRepository = inscricaoRepository;
         this.usuarioRepository = usuarioRepository;
         this.eventoRepository = eventoRepository;
@@ -39,14 +37,16 @@ public class InscricaoService {
 
         List<Inscricao> inscricoes = inscricaoRepository.findByEventoId(eventoId);
 
-        if (inscricoes.size() >= evento.getCapacidade()) {
+        int occupied = inscricoes.stream().mapToInt(Inscricao::getQuantidadeVisitantes).sum();
+
+        if (occupied >= evento.getCapacidade()) {
             throw new RuntimeException("Evento lotado");
         }
 
         Inscricao inscricao = new Inscricao();
         inscricao.setUsuario(usuario);
         inscricao.setEvento(evento);
-        inscricao.setDataInscricao(LocalDate.now());
+        inscricao.setDataHoraInscricao(LocalDateTime.now());
 
         return inscricaoRepository.save(inscricao);
     }

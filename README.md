@@ -29,3 +29,10 @@ Nesta primeira etapa, focamos na definição do escopo, mapeamento das necessida
     * Cadastro de eventos por administradores.
     * Agendamento de participação em eventos e visitas.
 
+
+-----
+## TO DO
+
+- ver cascade de entidades
+- ver security
+- constructors

@@ -16,18 +16,14 @@ public class EventoService {
         this.repository = repository;
     }
 
-    // Retorna todos os eventos cadastrados
     public List<Evento> listarEventos() {
         return repository.findAll();
     }
 
-    //busca um evento pelo id, lança erro se não encontrar
     public Evento buscarPorId(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Evento não encontrado com id: " + id));
+        return repository.findById(id).orElseThrow(() -> new RuntimeException("Evento não encontrado com id: " + id));
     }
 
-    //salva um novo evento no banco
     public Evento criarEvento(Evento evento) {
         return repository.save(evento);
     }
