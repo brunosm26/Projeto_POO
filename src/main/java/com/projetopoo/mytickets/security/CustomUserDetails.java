@@ -1,11 +1,12 @@
 package com.projetopoo.mytickets.security;
 
+import com.projetopoo.mytickets.model.Usuario;
+import com.projetopoo.mytickets.model.enums.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
-import com.projetopoo.mytickets.model.Usuario;
 
 public class CustomUserDetails implements UserDetails {
 
@@ -21,11 +22,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (Boolean.TRUE.equals(usuario.getIsAdmin())) {
-            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        } else {
-            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-        }
+        return List.of(new SimpleGrantedAuthority("ROLE_" + usuario.getRole().name()));
     }
 
     @Override
@@ -39,22 +36,14 @@ public class CustomUserDetails implements UserDetails {
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+    public boolean isAccountNonExpired() { return true; }
 
     @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+    public boolean isAccountNonLocked() { return true; }
 
     @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+    public boolean isCredentialsNonExpired() { return true; }
 
     @Override
-    public boolean isEnabled() {
-        return true;
-    }
+    public boolean isEnabled() { return true; }
 }
