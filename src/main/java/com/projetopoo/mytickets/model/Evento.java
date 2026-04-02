@@ -1,22 +1,13 @@
 package com.projetopoo.mytickets.model;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.JoinTable;
+import com.projetopoo.mytickets.model.enums.EventCategory;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
-import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "evento")
@@ -30,12 +21,22 @@ public class Evento {
     @Column(name = "nomeEvento", nullable = false)
     private String nomeEvento;
 
-    @Column(name = "descricao", length=500)
+    @Column(name = "descricao", length = 500)
     private String descricao;
 
     @Positive
     @Column(name = "capacidade")
     private int capacidade;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category")
+    private EventCategory category;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @Column(name = "location_detail")
+    private String locationDetail;
 
     @ManyToMany
     @JoinTable(name = "evento_admin",
@@ -55,7 +56,7 @@ public class Evento {
     private LocalDateTime dataHora;
 
     @ManyToOne
-    @JoinColumn(name = "tipo_evento_id", nullable = false)
+    @JoinColumn(name = "tipo_evento_id")
     private TipoEvento tipo;
 
     @PositiveOrZero
@@ -69,11 +70,27 @@ public class Evento {
     @Column(name = "isFimDeSemana")
     private Boolean isFimDeSemana;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     public Evento() {
     }
 
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
     public String getNomeEvento() { return nomeEvento; }
     public void setNomeEvento(String nomeEvento) { this.nomeEvento = nomeEvento; }
@@ -83,6 +100,15 @@ public class Evento {
 
     public int getCapacidade() { return capacidade; }
     public void setCapacidade(int capacidade) { this.capacidade = capacidade; }
+
+    public EventCategory getCategory() { return category; }
+    public void setCategory(EventCategory category) { this.category = category; }
+
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public String getLocationDetail() { return locationDetail; }
+    public void setLocationDetail(String locationDetail) { this.locationDetail = locationDetail; }
 
     public List<Usuario> getAdmins() { return admins; }
     public void setAdmins(List<Usuario> admins) { this.admins = admins; }
@@ -108,4 +134,6 @@ public class Evento {
     public Boolean getIsFimDeSemana() { return isFimDeSemana; }
     public void setIsFimDeSemana(Boolean isFimDeSemana) { this.isFimDeSemana = isFimDeSemana; }
 
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
 }
