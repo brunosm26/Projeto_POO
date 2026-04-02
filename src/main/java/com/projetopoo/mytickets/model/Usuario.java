@@ -1,19 +1,15 @@
 package com.projetopoo.mytickets.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Column;
+import com.projetopoo.mytickets.model.enums.Role;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "usuario")
 public class Usuario {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,11 +19,12 @@ public class Usuario {
     private String nome;
 
     @Email(message = "E-mail inválido")
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "isAdmin", nullable = false)
-    private Boolean isAdmin;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
 
     @Size(min = 5, max = 50)
     @Column(name = "username")
@@ -35,47 +32,37 @@ public class Usuario {
 
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
-    
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
     public Usuario() {
     }
 
-    public Long getId() {
-        return id;
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        if (this.role == null) {
+            this.role = Role.USER;
+        }
     }
 
-    public String getEmail() { 
-        return email; 
-    }
-    public void setEmail(String email) { 
-        this.email = email; 
-    }
+    public Long getId() { return id; }
 
-    public Boolean getIsAdmin() {
-        return isAdmin;
-    }
-    public void setIsAdmin(Boolean isAdmin) {
-        this.isAdmin = isAdmin;
-    }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-    public String getUsername() {
-        return username;
-    }
-    public String getNome() {
-        return nome;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
 
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
+    public String getPasswordHash() { return passwordHash; }
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
 }
