@@ -1,11 +1,9 @@
 package com.projetopoo.mytickets.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.projetopoo.mytickets.model.enums.EventCategory;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,18 +13,19 @@ public class Evento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "event_id")
+    private Long idEvento;
 
     @Size(min = 5, max = 50)
-    @Column(name = "nomeEvento", nullable = false)
-    private String nomeEvento;
+    @Column(name = "event_name", nullable = false)
+    private String eventName;
 
-    @Column(name = "descricao", length = 500)
-    private String descricao;
+    @Column(name = "description", length = 500)
+    private String description;
 
     @Positive
-    @Column(name = "capacidade")
-    private int capacidade;
+    @Column(name = "capacity")
+    private int capacity;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
@@ -38,46 +37,48 @@ public class Evento {
     @Column(name = "location_detail")
     private String locationDetail;
 
+    @JsonIgnore
     @ManyToMany
-    @JoinTable(name = "evento_admin",
-        joinColumns = @JoinColumn(name = "evento_id"),
-        inverseJoinColumns = @JoinColumn(name = "admin_id"))
+    @JoinTable(name = "event_admins",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<Usuario> admins;
 
-    @ManyToOne
-    @JoinColumn(name = "criador_id")
-    private Usuario criador;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "creator_id")
+    @JsonIgnore
+    private Usuario creator;
 
-    @Column(name = "gratuito")
-    private Boolean gratuito;
+    @Column(name = "is_free")
+    private Boolean isFree;
 
     @FutureOrPresent
-    @Column(name = "dataHora")
-    private LocalDateTime dataHora;
+    @Column(name = "scheduled_at")
+    private LocalDateTime scheduledAt;
 
-    @ManyToOne
-    @JoinColumn(name = "tipo_evento_id")
-    private TipoEvento tipo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_type_id")
+    @JsonIgnore
+    private TipoEvento eventType;
 
     @PositiveOrZero
-    @Column(name = "preco")
-    private double preco;
+    @Column(name = "price")
+    private double price;
 
     @Positive
-    @Column(name = "expectedPublic")
-    private int expectedPublic;
+    @Column(name = "expected_attendance")
+    private int expectedAttendance;
 
-    @Column(name = "isFimDeSemana")
-    private Boolean isFimDeSemana;
+    @Column(name = "is_weekend")
+    private Boolean isWeekend;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public Evento() {
-    }
+    public Evento() {}
 
     @PrePersist
     protected void onCreate() {
@@ -90,16 +91,16 @@ public class Evento {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public Long getId() { return id; }
+    public Long getIdEvento() { return idEvento; }
 
-    public String getNomeEvento() { return nomeEvento; }
-    public void setNomeEvento(String nomeEvento) { this.nomeEvento = nomeEvento; }
+    public String getEventName() { return eventName; }
+    public void setEventName(String eventName) { this.eventName = eventName; }
 
-    public String getDescricao() { return descricao; }
-    public void setDescricao(String descricao) { this.descricao = descricao; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public int getCapacidade() { return capacidade; }
-    public void setCapacidade(int capacidade) { this.capacidade = capacidade; }
+    public int getCapacity() { return capacity; }
+    public void setCapacity(int capacity) { this.capacity = capacity; }
 
     public EventCategory getCategory() { return category; }
     public void setCategory(EventCategory category) { this.category = category; }
@@ -113,26 +114,26 @@ public class Evento {
     public List<Usuario> getAdmins() { return admins; }
     public void setAdmins(List<Usuario> admins) { this.admins = admins; }
 
-    public Usuario getCriador() { return criador; }
-    public void setCriador(Usuario criador) { this.criador = criador; }
+    public Usuario getCreator() { return creator; }
+    public void setCreator(Usuario creator) { this.creator = creator; }
 
-    public Boolean getGratuito() { return gratuito; }
-    public void setGratuito(Boolean gratuito) { this.gratuito = gratuito; }
+    public Boolean getFree() { return isFree; }
+    public void setFree(Boolean free) { isFree = free; }
 
-    public LocalDateTime getDataHora() { return dataHora; }
-    public void setDataHora(LocalDateTime dataHora) { this.dataHora = dataHora; }
+    public LocalDateTime getScheduledAt() { return scheduledAt; }
+    public void setScheduledAt(LocalDateTime scheduledAt) { this.scheduledAt = scheduledAt; }
 
-    public TipoEvento getTipo() { return tipo; }
-    public void setTipo(TipoEvento tipo) { this.tipo = tipo; }
+    public TipoEvento getEventType() { return eventType; }
+    public void setEventType(TipoEvento eventType) { this.eventType = eventType; }
 
-    public double getPreco() { return preco; }
-    public void setPreco(double preco) { this.preco = preco; }
+    public double getPrice() { return price; }
+    public void setPrice(double price) { this.price = price; }
 
-    public int getExpectedPublic() { return expectedPublic; }
-    public void setExpectedPublic(int expectedPublic) { this.expectedPublic = expectedPublic; }
+    public int getExpectedAttendance() { return expectedAttendance; }
+    public void setExpectedAttendance(int expectedAttendance) { this.expectedAttendance = expectedAttendance; }
 
-    public Boolean getIsFimDeSemana() { return isFimDeSemana; }
-    public void setIsFimDeSemana(Boolean isFimDeSemana) { this.isFimDeSemana = isFimDeSemana; }
+    public Boolean getWeekend() { return isWeekend; }
+    public void setWeekend(Boolean weekend) { isWeekend = weekend; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }

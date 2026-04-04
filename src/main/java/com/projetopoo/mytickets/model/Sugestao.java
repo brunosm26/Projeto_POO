@@ -1,5 +1,6 @@
 package com.projetopoo.mytickets.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.projetopoo.mytickets.model.enums.EventCategory;
 import com.projetopoo.mytickets.model.enums.SuggestionStatus;
 import jakarta.persistence.*;
@@ -11,14 +12,15 @@ public class Sugestao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "suggestion_id")
+    private Long idSugestao;
 
     @Size(min = 5, max = 50)
-    @Column(name = "nomeEvento", nullable = false)
-    private String nomeEvento;
+    @Column(name = "event_name", nullable = false)
+    private String eventName;
 
-    @Column(name = "descricao", length = 500)
-    private String descricao;
+    @Column(name = "description", length = 500)
+    private String description;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
@@ -28,12 +30,12 @@ public class Sugestao {
     @Column(name = "status", nullable = false)
     private SuggestionStatus status;
 
-    @ManyToOne
-    @JoinColumn(name = "criador_id")
-    private Usuario criador;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "creator_id")
+    @JsonIgnore
+    private Usuario creator;
 
-    public Sugestao() {
-    }
+    public Sugestao() {}
 
     @PrePersist
     protected void onCreate() {
@@ -42,13 +44,13 @@ public class Sugestao {
         }
     }
 
-    public Long getId() { return id; }
+    public Long getIdSugestao() { return idSugestao; }
 
-    public String getNomeEvento() { return nomeEvento; }
-    public void setNomeEvento(String nomeEvento) { this.nomeEvento = nomeEvento; }
+    public String getEventName() { return eventName; }
+    public void setEventName(String eventName) { this.eventName = eventName; }
 
-    public String getDescricao() { return descricao; }
-    public void setDescricao(String descricao) { this.descricao = descricao; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
     public EventCategory getCategory() { return category; }
     public void setCategory(EventCategory category) { this.category = category; }
@@ -56,6 +58,6 @@ public class Sugestao {
     public SuggestionStatus getStatus() { return status; }
     public void setStatus(SuggestionStatus status) { this.status = status; }
 
-    public Usuario getCriador() { return criador; }
-    public void setCriador(Usuario criador) { this.criador = criador; }
+    public Usuario getCreator() { return creator; }
+    public void setCreator(Usuario creator) { this.creator = creator; }
 }

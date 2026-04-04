@@ -1,17 +1,8 @@
 package com.projetopoo.mytickets.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.Future;
-import jakarta.persistence.Column;
-
 
 @Entity
 @Table(name = "visita")
@@ -19,51 +10,39 @@ public class Visita {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "visit_id")
+    private Long idVisita;
 
-    @Future
-    @Column(name = "dataHora")
-    private LocalDateTime dataHora;
+    // @Future fica aqui porque visita é agendamento futuro — a validação é no DTO de entrada
+    @Column(name = "scheduled_at")
+    private LocalDateTime scheduledAt;
 
-    @Column(name = "autorizada")
-    private Boolean isAutorizada;
+    @Column(name = "is_authorized")
+    private Boolean isAuthorized;
 
-    @ManyToOne
-    @JoinColumn(name = "solicitante_id")
-    private Usuario usuarioSolicitante;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "requester_id")
+    @JsonIgnore
+    private Usuario requester;
 
-    @ManyToOne
-    @JoinColumn(name = "autorizador_id")
-    private Usuario adminAutorizador;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "authorizer_id")
+    @JsonIgnore
+    private Usuario authorizer;
 
-    public Long getId() { return this.id; }
+    public Visita() {}
 
-    public LocalDateTime getDataHora() {
-        return dataHora;
-    }
-    public void setDataHora(LocalDateTime dataHora) {
-        this.dataHora = dataHora;
-    }
+    public Long getIdVisita() { return idVisita; }
 
-    public Usuario getUsuarioSolicitante() {
-        return usuarioSolicitante;
-    }
-    public void setUsuarioSolicitante(Usuario usuarioSolicitante) {
-        this.usuarioSolicitante = usuarioSolicitante;
-    }
+    public LocalDateTime getScheduledAt() { return scheduledAt; }
+    public void setScheduledAt(LocalDateTime scheduledAt) { this.scheduledAt = scheduledAt; }
 
-    public Boolean getIsAutorizada() {
-        return isAutorizada;
-    }
-    public void setIsAutorizada(Boolean isAutorizada) {
-        this.isAutorizada = isAutorizada;
-    }
+    public Boolean getIsAuthorized() { return isAuthorized; }
+    public void setIsAuthorized(Boolean authorized) { isAuthorized = authorized; }
 
-    public Usuario getAdminAutorizador() {
-        return adminAutorizador;
-    }
-    public void setAdminAutorizador(Usuario adminAutorizador) {
-        this.adminAutorizador = adminAutorizador;
-    }
+    public Usuario getRequester() { return requester; }
+    public void setRequester(Usuario requester) { this.requester = requester; }
 
+    public Usuario getAuthorizer() { return authorizer; }
+    public void setAuthorizer(Usuario authorizer) { this.authorizer = authorizer; }
 }

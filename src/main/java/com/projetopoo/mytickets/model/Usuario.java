@@ -12,11 +12,12 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "user_id")
+    private Long idUsuario;
 
     @Size(min = 5, max = 50)
-    @Column(name = "nome", nullable = false)
-    private String nome;
+    @Column(name = "full_name", nullable = false)
+    private String name;
 
     @Email(message = "E-mail inválido")
     @Column(name = "email", nullable = false, unique = true)
@@ -26,31 +27,39 @@ public class Usuario {
     @Column(name = "role", nullable = false)
     private Role role;
 
-    @Size(min = 5, max = 50)
-    @Column(name = "username")
+    @Size(min = 5, max = 100)
+    @Column(name = "username", unique = true)
     private String username;
 
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    public Usuario() {
-    }
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    public Usuario() {}
 
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
         if (this.role == null) {
             this.role = Role.USER;
         }
     }
 
-    public Long getId() { return id; }
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
+    public Long getIdUsuario() { return idUsuario; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
@@ -65,4 +74,5 @@ public class Usuario {
     public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
 }
