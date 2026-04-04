@@ -1,11 +1,6 @@
 package com.projetopoo.mytickets.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tipo_evento")
@@ -13,36 +8,33 @@ public class TipoEvento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "event_type_id")
+    private Long idTipoEvento;
 
-    @Column(name = "nome")
-    private String nome;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "subtipo")
-    private String subtipo;
+    @Column(name = "subtype")
+    private String subtype;
 
-    public Long getId() {
-        return id;
+    public Long getIdTipoEvento() {
+        return idTipoEvento;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+
+    public String getName() {
+        return name;
     }
 
-    public String getNome() {
-        return nome;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public String getSubtype() {
+        return subtype;
     }
 
-    public String getSubtipo() {
-        return subtipo;
+    public void setSubtype(String subtype) {
+        this.subtype = subtype;
     }
-
-    public void setSubtipo(String subtipo) {
-        this.subtipo = subtipo;
-    }
-
 }

@@ -1,17 +1,8 @@
 package com.projetopoo.mytickets.model;
 
-import java.time.LocalDateTime;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Column;
-import jakarta.validation.constraints.Future;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "inscricao")
@@ -19,39 +10,38 @@ public class Inscricao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "inscription_id")
+    private Long idInscricao;
 
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private Usuario user;
 
-    @ManyToOne
-    @JoinColumn(name = "evento_id", nullable = false)
-    private Evento evento;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id", nullable = false)
+    private Evento event;
 
-    @Future
-    @Column(name = "dataHoraInscricao", nullable = false)
-    private LocalDateTime dataHoraInscricao;
+    // @Future removido — a data de inscrição pode ser o momento atual (LocalDateTime.now())
+    @Column(name = "registration_at", nullable = false)
+    private LocalDateTime registrationAt;
 
     @Positive
-    @Column(name = "quantidadeVisitantes", nullable = false)
-    private int quantidadeVisitantes;
+    @Column(name = "visitor_count", nullable = false)
+    private int visitorCount;
 
-    public Inscricao() {
-    }
+    public Inscricao() {}
 
-    public Long getId() { return id; }
+    public Long getIdInscricao() { return idInscricao; }
 
-    public Usuario getUsuario() { return usuario; }
-    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    public Usuario getUser() { return user; }
+    public void setUser(Usuario user) { this.user = user; }
 
-    public Evento getEvento() { return evento; }
-    public void setEvento(Evento evento) { this.evento = evento; }
+    public Evento getEvent() { return event; }
+    public void setEvent(Evento event) { this.event = event; }
 
-    public LocalDateTime getDataHoraInscricao() { return dataHoraInscricao; }
-    public void setDataHoraInscricao(LocalDateTime dataHoraInscricao) { this.dataHoraInscricao = dataHoraInscricao; }
+    public LocalDateTime getRegistrationAt() { return registrationAt; }
+    public void setRegistrationAt(LocalDateTime registrationAt) { this.registrationAt = registrationAt; }
 
-    public int getQuantidadeVisitantes() { return quantidadeVisitantes; }
-    public void setQuantidadeVisitantes(int quantidadeVisitantes) { this.quantidadeVisitantes = quantidadeVisitantes; }
-
+    public int getVisitorCount() { return visitorCount; }
+    public void setVisitorCount(int visitorCount) { this.visitorCount = visitorCount; }
 }

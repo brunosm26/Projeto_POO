@@ -1,11 +1,13 @@
 package com.projetopoo.mytickets.controller;
 
-import java.util.List;
-import org.springframework.http.ResponseEntity;
+import com.projetopoo.mytickets.model.dtos.VisitaDTO;
+import com.projetopoo.mytickets.model.dtos.VisitaResponseDTO;
+import com.projetopoo.mytickets.service.VisitaService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import com.projetopoo.mytickets.model.Visita;
-import com.projetopoo.mytickets.service.VisitaService;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/visitas")
@@ -18,17 +20,20 @@ public class VisitaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Visita>> listar() {
-        return ResponseEntity.ok(service.listarVisitas());
+    public List<VisitaResponseDTO> listar() {
+        return service.listarVisitas().stream()
+                .map(service::toResponseDTO)
+                .toList();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Visita> buscarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(service.buscarPorId(id));
+    @GetMapping("/{idVisita}")
+    public VisitaResponseDTO buscarPorId(@PathVariable Long idVisita) {
+        return service.toResponseDTO(service.buscarPorId(idVisita));
     }
 
     @PostMapping
-    public ResponseEntity<Visita> criar(@RequestBody Visita visita) {
-        return ResponseEntity.ok(service.criarVisita(visita));
+    @ResponseStatus(HttpStatus.CREATED)
+    public VisitaResponseDTO criar(@Valid @RequestBody VisitaDTO dto) {
+        return service.toResponseDTO(service.criarVisita(dto));
     }
 }

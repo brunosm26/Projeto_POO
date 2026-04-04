@@ -10,3 +10,6 @@ target/
 .env
 .env.local
 .env*.local
+
+http-tests/http-client.private.env.json
+

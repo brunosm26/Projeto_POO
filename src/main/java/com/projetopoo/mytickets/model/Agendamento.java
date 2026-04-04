@@ -1,15 +1,7 @@
 package com.projetopoo.mytickets.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Column;
 
 @Entity
 @Table(name = "agendamento")
@@ -17,57 +9,43 @@ public class Agendamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "booking_id")
+    private Long idAgendamento;
 
-    private LocalDateTime dataHoraAgendamento;
+    @Column(name = "booked_at")
+    private LocalDateTime bookedAt;
+
     @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+    @JoinColumn(name = "user_id", nullable = false)
+    private Usuario user;
 
     @ManyToOne
-    @JoinColumn(name = "evento_id", nullable = false)
-    private Evento evento;
+    @JoinColumn(name = "event_id", nullable = false)
+    private Evento event;
 
-    @Column(name = "qntdPessoas")
-    private int qntdPessoas;
+    @Column(name = "person_count")
+    private int personCount;
 
-    public Long getId() {
-        return id;
+    public Agendamento() {}
+
+    @PrePersist
+    protected void onCreate() {
+        if (this.bookedAt == null) {
+            this.bookedAt = LocalDateTime.now();
+        }
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Long getIdAgendamento() { return idAgendamento; }
 
-    public LocalDateTime getDataHoraAgendamento() {
-        return dataHoraAgendamento;
-    }
+    public LocalDateTime getBookedAt() { return bookedAt; }
+    public void setBookedAt(LocalDateTime bookedAt) { this.bookedAt = bookedAt; }
 
-    public void setDataHoraAgendamento(LocalDateTime dataHoraAgendamento) {
-        this.dataHoraAgendamento = dataHoraAgendamento;
-    }
+    public Usuario getUser() { return user; }
+    public void setUser(Usuario user) { this.user = user; }
 
-    public Usuario getUsuario() {
-        return usuario;
-    }
+    public Evento getEvent() { return event; }
+    public void setEvent(Evento event) { this.event = event; }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public Evento getEvento() {
-        return evento;
-    }
-
-    public void setEvento(Evento evento) {
-        this.evento = evento;
-    }
-
-    public int getQntdPessoas() {
-        return qntdPessoas;
-    }
-
-    public void setQntdPessoas(int qntdPessoas) {
-        this.qntdPessoas = qntdPessoas;
-    }
+    public int getPersonCount() { return personCount; }
+    public void setPersonCount(int personCount) { this.personCount = personCount; }
 }

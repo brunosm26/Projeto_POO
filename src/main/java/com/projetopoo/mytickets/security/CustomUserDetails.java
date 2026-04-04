@@ -1,7 +1,6 @@
 package com.projetopoo.mytickets.security;
 
 import com.projetopoo.mytickets.model.Usuario;
-import com.projetopoo.mytickets.model.enums.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

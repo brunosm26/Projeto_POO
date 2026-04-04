@@ -1,16 +1,21 @@
 package com.projetopoo.mytickets.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
+import com.projetopoo.mytickets.exception.BusinessException;
+import com.projetopoo.mytickets.exception.EntityNotFoundException;
 import com.projetopoo.mytickets.model.Evento;
 import com.projetopoo.mytickets.model.Inscricao;
 import com.projetopoo.mytickets.model.Usuario;
+import com.projetopoo.mytickets.model.dtos.InscricaoDTO;
 import com.projetopoo.mytickets.repository.EventoRepository;
 import com.projetopoo.mytickets.repository.InscricaoRepository;
 import com.projetopoo.mytickets.repository.UsuarioRepository;
+import com.projetopoo.mytickets.security.CustomUserDetails;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class InscricaoService {
@@ -20,38 +25,47 @@ public class InscricaoService {
     private final EventoRepository eventoRepository;
 
     public InscricaoService(InscricaoRepository inscricaoRepository,
-            UsuarioRepository usuarioRepository,
-            EventoRepository eventoRepository) {
+                            UsuarioRepository usuarioRepository,
+                            EventoRepository eventoRepository) {
         this.inscricaoRepository = inscricaoRepository;
         this.usuarioRepository = usuarioRepository;
         this.eventoRepository = eventoRepository;
     }
 
-    public Inscricao inscrever(Long usuarioId, Long eventoId) {
+    @Transactional
+    public Inscricao salvarInscricao(InscricaoDTO dto) {
+        Usuario usuario = usuarioRepository.findById(dto.userId())
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com ID: " + dto.userId()));
 
-        Usuario usuario = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        Evento evento = eventoRepository.findById(dto.eventId())
+                .orElseThrow(() -> new EntityNotFoundException("Evento não encontrado com ID: " + dto.eventId()));
 
-        Evento evento = eventoRepository.findById(eventoId)
-                .orElseThrow(() -> new RuntimeException("Evento não encontrado"));
+        List<Inscricao> inscricoesExistentes = inscricaoRepository.findByEvent_IdEvento(dto.eventId());
+        int ocupado = inscricoesExistentes.stream().mapToInt(Inscricao::getVisitorCount).sum();
 
-        List<Inscricao> inscricoes = inscricaoRepository.findByEventoId(eventoId);
-
-        int occupied = inscricoes.stream().mapToInt(Inscricao::getQuantidadeVisitantes).sum();
-
-        if (occupied >= evento.getCapacidade()) {
-            throw new RuntimeException("Evento lotado");
+        if (ocupado + dto.visitorCount() > evento.getCapacity()) {
+            throw new BusinessException("Capacidade insuficiente. Vagas disponíveis: " + (evento.getCapacity() - ocupado));
         }
 
         Inscricao inscricao = new Inscricao();
-        inscricao.setUsuario(usuario);
-        inscricao.setEvento(evento);
-        inscricao.setDataHoraInscricao(LocalDateTime.now());
+        inscricao.setUser(usuario);
+        inscricao.setEvent(evento);
+        inscricao.setRegistrationAt(dto.registrationAt() != null ? dto.registrationAt() : LocalDateTime.now());
+        inscricao.setVisitorCount(dto.visitorCount());
 
         return inscricaoRepository.save(inscricao);
     }
 
-    public List<Inscricao> listarPorUsuario(Long usuarioId) {
-        return inscricaoRepository.findByUsuarioId(usuarioId);
+    @Transactional(readOnly = true)
+    public List<Inscricao> listarTodas() {
+        return inscricaoRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Inscricao> listarInscricoesUsuarioLogado() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long userId = userDetails.getUsuario().getIdUsuario();
+        return inscricaoRepository.findByUser_IdUsuario(userId);
     }
 }
