@@ -2,8 +2,11 @@ package com.projetopoo.mytickets.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.time.LocalDateTime;
 
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @Entity
 @Table(name = "visita")
 public class Visita {
@@ -30,19 +33,4 @@ public class Visita {
     @JsonIgnore
     private Usuario authorizer;
 
-    public Visita() {}
-
-    public Long getIdVisita() { return idVisita; }
-
-    public LocalDateTime getScheduledAt() { return scheduledAt; }
-    public void setScheduledAt(LocalDateTime scheduledAt) { this.scheduledAt = scheduledAt; }
-
-    public Boolean getIsAuthorized() { return isAuthorized; }
-    public void setIsAuthorized(Boolean authorized) { isAuthorized = authorized; }
-
-    public Usuario getRequester() { return requester; }
-    public void setRequester(Usuario requester) { this.requester = requester; }
-
-    public Usuario getAuthorizer() { return authorizer; }
-    public void setAuthorizer(Usuario authorizer) { this.authorizer = authorizer; }
 }

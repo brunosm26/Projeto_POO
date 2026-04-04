@@ -36,8 +36,8 @@ public class EventoService {
         evento.setCapacity(dto.capacity());
         evento.setPrice(dto.price());
         evento.setExpectedAttendance(dto.expectedAttendance());
-        evento.setFree(dto.isFree());
-        evento.setWeekend(dto.isWeekend());
+        evento.setIsFree(dto.isFree());
+        evento.setIsWeekend(dto.isWeekend());
         evento.setScheduledAt(dto.scheduledAt());
         evento.setCategory(dto.category());
         evento.setImageUrl(dto.imageUrl());
@@ -109,12 +109,12 @@ public class EventoService {
                 e.getCapacity(),
                 e.getLocationDetail(),
                 e.getCreator() != null ? e.getCreator().getIdUsuario() : null,
-                e.getFree(),
+                e.getIsFree(),
                 e.getScheduledAt(),
                 e.getEventType() != null ? e.getEventType().getIdTipoEvento() : null,
                 e.getPrice(),
                 e.getExpectedAttendance(),
-                e.getWeekend(),
+                e.getIsWeekend(),
                 e.getCategory(),
                 e.getCreatedAt(),
                 e.getUpdatedAt(),

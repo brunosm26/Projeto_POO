@@ -1,7 +1,12 @@
 package com.projetopoo.mytickets.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @Entity
 @Table(name = "tipo_evento")
 public class TipoEvento {
@@ -17,24 +22,4 @@ public class TipoEvento {
     @Column(name = "subtype")
     private String subtype;
 
-    public Long getIdTipoEvento() {
-        return idTipoEvento;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSubtype() {
-        return subtype;
-    }
-
-    public void setSubtype(String subtype) {
-        this.subtype = subtype;
-    }
 }

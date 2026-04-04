@@ -5,7 +5,12 @@ import com.projetopoo.mytickets.model.enums.EventCategory;
 import com.projetopoo.mytickets.model.enums.SuggestionStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @Entity
 @Table(name = "sugestao")
 public class Sugestao {
@@ -35,7 +40,6 @@ public class Sugestao {
     @JsonIgnore
     private Usuario creator;
 
-    public Sugestao() {}
 
     @PrePersist
     protected void onCreate() {
@@ -44,20 +48,4 @@ public class Sugestao {
         }
     }
 
-    public Long getIdSugestao() { return idSugestao; }
-
-    public String getEventName() { return eventName; }
-    public void setEventName(String eventName) { this.eventName = eventName; }
-
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-
-    public EventCategory getCategory() { return category; }
-    public void setCategory(EventCategory category) { this.category = category; }
-
-    public SuggestionStatus getStatus() { return status; }
-    public void setStatus(SuggestionStatus status) { this.status = status; }
-
-    public Usuario getCreator() { return creator; }
-    public void setCreator(Usuario creator) { this.creator = creator; }
 }

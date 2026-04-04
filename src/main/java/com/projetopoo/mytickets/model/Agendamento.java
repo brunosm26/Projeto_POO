@@ -1,8 +1,14 @@
 package com.projetopoo.mytickets.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @Entity
 @Table(name = "agendamento")
 public class Agendamento {
@@ -26,8 +32,6 @@ public class Agendamento {
     @Column(name = "person_count")
     private int personCount;
 
-    public Agendamento() {}
-
     @PrePersist
     protected void onCreate() {
         if (this.bookedAt == null) {
@@ -35,17 +39,4 @@ public class Agendamento {
         }
     }
 
-    public Long getIdAgendamento() { return idAgendamento; }
-
-    public LocalDateTime getBookedAt() { return bookedAt; }
-    public void setBookedAt(LocalDateTime bookedAt) { this.bookedAt = bookedAt; }
-
-    public Usuario getUser() { return user; }
-    public void setUser(Usuario user) { this.user = user; }
-
-    public Evento getEvent() { return event; }
-    public void setEvent(Evento event) { this.event = event; }
-
-    public int getPersonCount() { return personCount; }
-    public void setPersonCount(int personCount) { this.personCount = personCount; }
 }
