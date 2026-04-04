@@ -101,6 +101,29 @@ public class EventoService {
         return eventoRepository.save(evento);
     }
 
+    @Transactional
+    public Evento atualizarEvento(Long id, EventoDTO dto) {
+        Evento evento = buscarPorId(id);
+        evento.setEventName(dto.eventName());
+        evento.setDescription(dto.description());
+        evento.setCapacity(dto.capacity());
+        evento.setPrice(dto.price());
+        evento.setExpectedAttendance(dto.expectedAttendance());
+        evento.setFree(dto.isFree());
+        evento.setWeekend(dto.isWeekend());
+        evento.setScheduledAt(dto.scheduledAt());
+        evento.setCategory(dto.category());
+        evento.setImageUrl(dto.imageUrl());
+        evento.setLocationDetail(dto.locationDetail());
+        return eventoRepository.save(evento);
+    }
+
+    @Transactional
+    public void deletarEvento(Long id) {
+        Evento evento = buscarPorId(id);
+        eventoRepository.delete(evento);
+    }
+
     public EventoDTO toDTO(Evento e) {
         return new EventoDTO(
                 e.getIdEvento(),

@@ -52,4 +52,17 @@ public class EventoController {
     public void removerAdmin(@PathVariable Long idEvento, @PathVariable Long idUsuario) {
         service.removerAdmin(idEvento, idUsuario);
     }
+
+    @PutMapping("/{idEvento}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public EventoDTO atualizar(@PathVariable Long idEvento, @Valid @RequestBody EventoDTO dto) {
+        return service.toDTO(service.atualizarEvento(idEvento, dto));
+    }
+
+    @DeleteMapping("/{idEvento}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletar(@PathVariable Long idEvento) {
+        service.deletarEvento(idEvento);
+    }
 }
