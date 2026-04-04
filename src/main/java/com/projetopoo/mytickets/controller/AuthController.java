@@ -1,6 +1,5 @@
 package com.projetopoo.mytickets.controller;
 
-import com.projetopoo.mytickets.exception.BusinessException;
 import com.projetopoo.mytickets.model.Usuario;
 import com.projetopoo.mytickets.model.dtos.AuthRequest;
 import com.projetopoo.mytickets.model.dtos.RegisterRequest;
@@ -10,9 +9,9 @@ import com.projetopoo.mytickets.security.CustomUserDetails;
 import com.projetopoo.mytickets.security.TokenService;
 import com.projetopoo.mytickets.service.UsuarioService;
 import jakarta.validation.Valid;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +57,7 @@ public class AuthController {
         );
     }
     @PostMapping("/register-admin")
-    @Profile("dev") // desenvolvimento
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioResponse registerAdmin(@Valid @RequestBody RegisterRequest request) {
         Usuario usuario = usuarioService.registrarAdmin(request);

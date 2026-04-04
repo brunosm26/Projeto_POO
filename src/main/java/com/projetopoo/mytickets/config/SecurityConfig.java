@@ -40,7 +40,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/register-admin").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/eventos").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/eventos/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
