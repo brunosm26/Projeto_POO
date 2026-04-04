@@ -1,11 +1,13 @@
 package com.projetopoo.mytickets.controller;
 
-import java.util.List;
-import org.springframework.http.ResponseEntity;
+import com.projetopoo.mytickets.model.dtos.AgendamentoDTO;
+import com.projetopoo.mytickets.model.dtos.AgendamentoResponseDTO;
+import com.projetopoo.mytickets.service.AgendamentoService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import com.projetopoo.mytickets.model.Agendamento;
-import com.projetopoo.mytickets.service.AgendamentoService;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/agendamentos")
@@ -18,17 +20,20 @@ public class AgendamentoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Agendamento>> listar() {
-        return ResponseEntity.ok(service.listarAgendamentos());
+    public List<AgendamentoResponseDTO> listar() {
+        return service.listarAgendamentos().stream()
+                .map(service::toResponseDTO)
+                .toList();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Agendamento> buscarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(service.buscarPorId(id));
+    @GetMapping("/{idAgendamento}")
+    public AgendamentoResponseDTO buscarPorId(@PathVariable Long idAgendamento) {
+        return service.toResponseDTO(service.buscarPorId(idAgendamento));
     }
 
     @PostMapping
-    public ResponseEntity<Agendamento> criar(@RequestBody Agendamento agendamento) {
-        return ResponseEntity.ok(service.criarAgendamento(agendamento));
+    @ResponseStatus(HttpStatus.CREATED)
+    public AgendamentoResponseDTO criar(@Valid @RequestBody AgendamentoDTO dto) {
+        return service.toResponseDTO(service.criarAgendamento(dto));
     }
 }

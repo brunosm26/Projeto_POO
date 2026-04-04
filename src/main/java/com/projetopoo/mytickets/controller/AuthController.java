@@ -1,22 +1,21 @@
 package com.projetopoo.mytickets.controller;
 
-import com.projetopoo.mytickets.model.DTOs.AuthRequest;
-import com.projetopoo.mytickets.model.DTOs.RegisterRequest;
-import com.projetopoo.mytickets.model.DTOs.TokenResponse;
-import com.projetopoo.mytickets.model.DTOs.UsuarioResponse;
+import com.projetopoo.mytickets.exception.BusinessException;
 import com.projetopoo.mytickets.model.Usuario;
-import com.projetopoo.mytickets.model.enums.Role;
-import com.projetopoo.mytickets.repository.UsuarioRepository;
+import com.projetopoo.mytickets.model.dtos.AuthRequest;
+import com.projetopoo.mytickets.model.dtos.RegisterRequest;
+import com.projetopoo.mytickets.model.dtos.TokenResponse;
+import com.projetopoo.mytickets.model.dtos.UsuarioResponse;
 import com.projetopoo.mytickets.security.CustomUserDetails;
 import com.projetopoo.mytickets.security.TokenService;
+import com.projetopoo.mytickets.service.UsuarioService;
+import jakarta.validation.Valid;
+import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -24,15 +23,14 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
-    private final UsuarioRepository usuarioRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final UsuarioService usuarioService;
 
-    public AuthController(AuthenticationManager authenticationManager, TokenService tokenService,
-                          UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public AuthController(AuthenticationManager authenticationManager,
+                          TokenService tokenService,
+                          UsuarioService usuarioService) {
         this.authenticationManager = authenticationManager;
         this.tokenService = tokenService;
-        this.usuarioRepository = usuarioRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.usuarioService = usuarioService;
     }
 
     @PostMapping("/login")
@@ -47,24 +45,29 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UsuarioResponse> register(@RequestBody RegisterRequest request) {
-        if (usuarioRepository.findByEmail(request.email()).isPresent()) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        Usuario novoUsuario = new Usuario();
-        novoUsuario.setNome(request.nome());
-        novoUsuario.setEmail(request.email());
-        novoUsuario.setUsername(request.username());
-        novoUsuario.setRole(Role.USER);
-        novoUsuario.setPasswordHash(passwordEncoder.encode(request.password()));
-
-        Usuario savedUser = usuarioRepository.save(novoUsuario);
-        return ResponseEntity.ok(new UsuarioResponse(
-                savedUser.getId(),
-                savedUser.getNome(),
-                savedUser.getEmail(),
-                savedUser.getUsername()
-        ));
+    @ResponseStatus(HttpStatus.CREATED)
+    public UsuarioResponse register(@Valid @RequestBody RegisterRequest request) {
+        // Lógica de registro centralizada no UsuarioService — sem acesso direto ao repositório aqui
+        Usuario usuario = usuarioService.registrar(request);
+        return new UsuarioResponse(
+                usuario.getIdUsuario(),
+                usuario.getName(),
+                usuario.getEmail(),
+                usuario.getUsername(),
+                usuario.getUpdatedAt()
+        );
+    }
+    @PostMapping("/register-admin")
+    @Profile("dev") // desenvolvimento
+    @ResponseStatus(HttpStatus.CREATED)
+    public UsuarioResponse registerAdmin(@Valid @RequestBody RegisterRequest request) {
+        Usuario usuario = usuarioService.registrarAdmin(request);
+        return new UsuarioResponse(
+                usuario.getIdUsuario(),
+                usuario.getName(),
+                usuario.getEmail(),
+                usuario.getUsername(),
+                usuario.getUpdatedAt()
+        );
     }
 }

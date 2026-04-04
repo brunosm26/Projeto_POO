@@ -1,23 +1,16 @@
 package com.projetopoo.mytickets.controller;
 
+import com.projetopoo.mytickets.model.dtos.EventoDTO;
+import com.projetopoo.mytickets.service.EventoService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
-import org.springframework.security.access.prepost.PreAuthorize;
-
-import com.projetopoo.mytickets.model.Evento;
-import com.projetopoo.mytickets.service.EventoService;
-
 @RestController
-@RequestMapping("/eventos")
+@RequestMapping("/api/eventos")
 public class EventoController {
 
     private final EventoService service;
@@ -27,19 +20,36 @@ public class EventoController {
     }
 
     @GetMapping
-    public List<Evento> listar() {
-        return service.listarEventos();
+    public List<EventoDTO> listar() {
+        return service.listarEventos().stream()
+                .map(service::toDTO)
+                .toList();
     }
 
-    @GetMapping("/{id}")
-    public Evento buscarPorId(@PathVariable Long id) {
-        return service.buscarPorId(id);
+    @GetMapping("/{idEvento}")
+    public EventoDTO buscarPorId(@PathVariable Long idEvento) {
+        return service.toDTO(service.buscarPorId(idEvento));
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
-    public Evento criar(@RequestBody Evento evento) {
-        return service.criarEvento(evento);
+    public EventoDTO criar(@Valid @RequestBody EventoDTO dto) {
+        return service.toDTO(service.criarEvento(dto));
+    }
+
+    // gerenciamento de admins do evento (tabela event_admins)
+    @PostMapping("/{idEvento}/admins/{idUsuario}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public EventoDTO adicionarAdmin(@PathVariable Long idEvento, @PathVariable Long idUsuario) {
+        return service.toDTO(service.adicionarAdmin(idEvento, idUsuario));
+    }
+
+    @DeleteMapping("/{idEvento}/admins/{idUsuario}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removerAdmin(@PathVariable Long idEvento, @PathVariable Long idUsuario) {
+        service.removerAdmin(idEvento, idUsuario);
     }
 }

@@ -1,11 +1,13 @@
 package com.projetopoo.mytickets.controller;
 
-import java.util.List;
-import org.springframework.http.ResponseEntity;
+import com.projetopoo.mytickets.model.dtos.SugestaoDTO;
+import com.projetopoo.mytickets.model.dtos.SugestaoResponseDTO;
+import com.projetopoo.mytickets.service.SugestaoService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import com.projetopoo.mytickets.model.Sugestao;
-import com.projetopoo.mytickets.service.SugestaoService;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/sugestoes")
@@ -18,17 +20,20 @@ public class SugestaoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Sugestao>> listar() {
-        return ResponseEntity.ok(service.listarSugestoes());
+    public List<SugestaoResponseDTO> listar() {
+        return service.listarSugestoes().stream()
+                .map(service::toResponseDTO)
+                .toList();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Sugestao> buscarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(service.buscarPorId(id));
+    @GetMapping("/{idSugestao}")
+    public SugestaoResponseDTO buscarPorId(@PathVariable Long idSugestao) {
+        return service.toResponseDTO(service.buscarPorId(idSugestao));
     }
 
     @PostMapping
-    public ResponseEntity<Sugestao> criar(@RequestBody Sugestao sugestao) {
-        return ResponseEntity.ok(service.criarSugestao(sugestao));
+    @ResponseStatus(HttpStatus.CREATED)
+    public SugestaoResponseDTO criar(@Valid @RequestBody SugestaoDTO dto) {
+        return service.toResponseDTO(service.criarSugestao(dto));
     }
 }
