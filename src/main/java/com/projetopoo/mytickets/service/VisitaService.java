@@ -12,6 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.AccessDeniedException;
+import com.projetopoo.mytickets.security.CustomUserDetails;
+
 @Service
 public class VisitaService {
 
@@ -45,13 +50,49 @@ public class VisitaService {
 
     @Transactional(readOnly = true)
     public List<Visita> listarVisitas() {
-        return visitaRepository.findAll();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth != null && auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        List<Visita> todasVisitas = visitaRepository.findAll();
+
+        if (isAdmin) {
+            return todasVisitas;
+        }
+
+        if (auth != null && auth.getPrincipal() instanceof CustomUserDetails) {
+            CustomUserDetails principal = (CustomUserDetails) auth.getPrincipal();
+            Long currentUserId = principal.getUsuario().getIdUsuario();
+            return todasVisitas.stream()
+                    .filter(v -> v.getRequester() != null && v.getRequester().getIdUsuario().equals(currentUserId))
+                    .toList();
+        }
+
+        throw new AccessDeniedException("Acesso negado.");
     }
 
     @Transactional(readOnly = true)
     public Visita buscarPorId(Long id) {
-        return visitaRepository.findById(id)
+        Visita visita = visitaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Visita não encontrada com ID: " + id));
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth != null && auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isAdmin) {
+            if (auth != null && auth.getPrincipal() instanceof CustomUserDetails) {
+                CustomUserDetails principal = (CustomUserDetails) auth.getPrincipal();
+                Long currentUserId = principal.getUsuario().getIdUsuario();
+                if (visita.getRequester() == null || !visita.getRequester().getIdUsuario().equals(currentUserId)) {
+                    throw new AccessDeniedException("Você não tem permissão para visualizar esta visita.");
+                }
+            } else {
+                 throw new AccessDeniedException("Acesso negado.");
+            }
+        }
+
+        return visita;
     }
 
     public VisitaResponseDTO toResponseDTO(Visita v) {

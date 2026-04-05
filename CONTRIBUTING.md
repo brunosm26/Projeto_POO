@@ -185,17 +185,20 @@ chmod +x mvnw
 - [x] Sugestoes: `POST`, `GET`, `GET /{id}`
 - [x] Autenticacao JWT: login, register, register-admin (protegido por ADMIN)
 - [x] Documentacao da API disponivel em `/docs` (Scalar UI)
+- [x] Proteger `GET /api/usuarios` — atualmente publico sem autenticacao
+- [x] Refatorar `Visita`: unificar `date` + `time` em `scheduled_at`
 
 ### Pendente
-- [ ] Corrigir CORS: restringir `allowedOrigins` para a URL do frontend em producao
-- [ ] Mudar `spring.jpa.hibernate.ddl-auto=update` para `validate` em producao
 - [ ] Implementar `GET /api/eventos?categoria=` — filtro de eventos por categoria
-- [ ] Proteger `GET /api/usuarios` — atualmente publico sem autenticacao
 - [ ] Implementar atualizacao de status de Sugestao (aprovar/ignorar) — endpoint ADMIN
-- [ ] Refatorar `Visita`: unificar `date` + `time` em `scheduled_at`
 - [ ] Revisar cascade de entidades
 - [ ] Adicionar DELETE para Agendamento, Inscricao, Visita e Sugestao
 - [ ] Atualizar CONTRIBUTING.md com stack e estrutura atual (Supabase, novos DTOs, etc.)
+- [ ] Unificar Visita e Agendamento? (código duplicado?, ou eu não entendi a regra de negócio)
+
+### Pendente (produção)
+- [ ] Corrigir CORS: restringir `allowedOrigins` para a URL do frontend em producao
+- [ ] Mudar `spring.jpa.hibernate.ddl-auto=update` para `validate` em producao
 
 ## Equipe
 

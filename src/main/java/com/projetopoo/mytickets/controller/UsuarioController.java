@@ -1,15 +1,12 @@
 package com.projetopoo.mytickets.controller;
 
 import com.projetopoo.mytickets.model.Usuario;
-import com.projetopoo.mytickets.model.dtos.PublicUserDTO;
 import com.projetopoo.mytickets.model.dtos.RegisterRequest;
 import com.projetopoo.mytickets.model.dtos.UsuarioResponse;
 import com.projetopoo.mytickets.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,20 +30,10 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public List<?> listar() {
-        var auth = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAdmin = auth != null
-                && auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
-
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<UsuarioResponse> listar() {
         List<Usuario> usuarios = service.listarUsuarios();
-
-        if (isAdmin) {
-            return usuarios.stream().map(this::toResponse).toList();
-        } else {
-            return usuarios.stream()
-                    .map(u -> new PublicUserDTO(u.getName(), u.getUsername()))
-                    .toList();
-        }
+        return usuarios.stream().map(this::toResponse).toList();
     }
 
     @GetMapping("/{idUsuario}")

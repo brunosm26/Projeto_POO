@@ -28,11 +28,3 @@ Nesta primeira etapa, focamos na definição do escopo, mapeamento das necessida
     * Painel Administrativo com métricas de estatística (tendência central e dispersão).
     * Cadastro de eventos por administradores.
     * Agendamento de participação em eventos e visitas.
-
-
------
-## TO DO
-
-- ver cascade de entidades
-- ver security
-- constructors
