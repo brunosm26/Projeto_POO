@@ -3,6 +3,8 @@ package com.projetopoo.mytickets.config;
 import com.projetopoo.mytickets.model.Usuario;
 import com.projetopoo.mytickets.model.enums.Role;
 import com.projetopoo.mytickets.repository.UsuarioRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Profile("dev")
 public class MockDataInitializer implements CommandLineRunner {
+
+    private static final Logger log = LoggerFactory.getLogger(MockDataInitializer.class);
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
@@ -42,8 +46,7 @@ public class MockDataInitializer implements CommandLineRunner {
             usuarioRepository.save(admin);
             usuarioRepository.save(normal);
 
-            System.out.println("   Admin: admin@example.com | Pass: 123456");
-            System.out.println("   User : user@example.com  | Pass: 123456");
+            log.info("Mock users criados — Admin: admin@example.com | User: user@example.com | Pass: 123456");
         }
     }
 }

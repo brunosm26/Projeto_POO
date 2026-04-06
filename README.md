@@ -24,7 +24,8 @@ Nesta primeira etapa, focamos na definição do escopo, mapeamento das necessida
 
 ## 🛠️ Tecnologias e Funcionalidades do MVP
 * **Tipo de Solução:** Aplicação Web.
-* **Principais Funcionalidades:** * Visualização e filtro de eventos.
+* **Principais Funcionalidades:**
+    * Visualização e filtro de eventos.
     * Painel Administrativo com métricas de estatística (tendência central e dispersão).
     * Cadastro de eventos por administradores.
     * Agendamento de participação em eventos e visitas.
