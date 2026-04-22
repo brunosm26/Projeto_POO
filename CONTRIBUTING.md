@@ -107,34 +107,91 @@ src/main/java/com/projetopoo/mytickets/
 
 ## Endpoints
 
+Base URL: `http://localhost:8080`
+Documentacao interativa: `/docs` (Scalar UI) | OpenAPI JSON: `/v3/api-docs`
+
+Apos o login, envie o token em todas as requisicoes autenticadas:
+```
+Authorization: Bearer {token}
+```
+> Token JWT com expiracao de **2 horas**. Algoritmo HMAC256.
+
 ### Autenticacao (publico)
-| Metodo | Rota                  | Descricao         |
-|--------|-----------------------|-------------------|
-| POST   | /api/auth/register    | Cadastrar usuario |
-| POST   | /api/auth/login       | Login, retorna JWT |
 
-### Eventos (requer JWT)
-| Metodo | Rota                            | Descricao                   |
-|--------|---------------------------------|-----------------------------|
-| GET    | /api/eventos                    | Listar eventos futuros      |
-| GET    | /api/eventos/{id}               | Detalhes de um evento       |
-| POST   | /api/eventos                    | Cadastrar evento (admin)    |
-| PUT    | /api/eventos/{id}               | Editar evento (admin)       |
-| GET    | /api/eventos?categoria=SHOW     | Filtrar por categoria       |
-| POST   | /api/eventos/{id}/participar    | Confirmar participacao      |
+| Metodo | Rota                       | Acesso  | Status |
+|--------|----------------------------|---------|--------|
+| POST   | `/api/auth/register`       | Publico | [x]     |
+| POST   | `/api/auth/login`          | Publico | [x]     |
+| POST   | `/api/auth/register-admin` | ADMIN   | [x]     |
 
-### Outros (requer JWT)
-| Metodo | Rota              | Descricao              |
-|--------|-------------------|------------------------|
-| POST   | /api/sugestoes    | Sugerir evento         |
-| GET    | /api/sugestoes    | Listar sugestoes (admin)|
-| POST   | /api/visitas      | Agendar visita         |
+### Eventos (leitura publica)
 
-### Documentacao
-| Recurso             | URL                               |
-|---------------------|-----------------------------------|
-| Scalar UI           | http://localhost:8080/docs        |
-| OpenAPI JSON        | http://localhost:8080/v3/api-docs |
+| Metodo | Rota                                    | Acesso  | Status      |
+|--------|-----------------------------------------|---------|-------------|
+| GET    | `/api/eventos`                          | Publico | [x]          |
+| GET    | `/api/eventos/{id}`                     | Publico | [x]          |
+| POST   | `/api/eventos`                          | ADMIN   | [x]          |
+| PUT    | `/api/eventos/{id}`                     | ADMIN   | [x]          |
+| DELETE | `/api/eventos/{id}`                     | ADMIN   | [x]          |
+| POST   | `/api/eventos/{id}/admins/{idUsuario}`  | ADMIN   | [x]          |
+| DELETE | `/api/eventos/{id}/admins/{idUsuario}`  | ADMIN   | [x]          |
+| GET    | `/api/eventos?categoria={categoria}`    | Publico | [ ] pendente |
+
+> Categorias: `ESPORTE`, `SHOW`, `CULTURAL`, `CORPORATIVO`
+
+### Usuarios (admin)
+
+| Metodo | Rota                   | Acesso                   | Status      |
+|--------|------------------------|--------------------------|-------------|
+| GET    | `/api/usuarios`        | ADMIN                    | [x]          |
+| GET    | `/api/usuarios/{id}`   | ADMIN                    | [x]          |
+| POST   | `/api/usuarios`        | ADMIN                    | [x]          |
+| PUT    | `/api/usuarios/{id}`   | ADMIN / proprio usuario  | [x]          |
+| DELETE | `/api/usuarios/{id}`   | ADMIN                    | [ ] pendente |
+
+### Inscricoes
+
+| Metodo | Rota                    | Acesso      | Status      |
+|--------|-------------------------|-------------|-------------|
+| POST   | `/api/inscricoes`       | Autenticado | [x]          |
+| GET    | `/api/inscricoes`       | ADMIN       | [x]          |
+| GET    | `/api/inscricoes/me`    | Autenticado | [x]          |
+| DELETE | `/api/inscricoes/{id}`  | Autenticado | [ ] pendente |
+
+### Agendamentos
+
+| Metodo | Rota                       | Acesso      | Status      |
+|--------|----------------------------|-------------|-------------|
+| POST   | `/api/agendamentos`        | Autenticado | [x]          |
+| GET    | `/api/agendamentos`        | ADMIN       | [x]          |
+| GET    | `/api/agendamentos/{id}`   | Autenticado | [x]          |
+| DELETE | `/api/agendamentos/{id}`   | Autenticado | [ ] pendente |
+
+### Visitas
+
+| Metodo | Rota                 | Acesso      | Status      |
+|--------|----------------------|-------------|-------------|
+| POST   | `/api/visitas`       | Autenticado | [x]          |
+| GET    | `/api/visitas`       | Autenticado | [x]          |
+| GET    | `/api/visitas/{id}`  | Autenticado | [x]          |
+| DELETE | `/api/visitas/{id}`  | Autenticado | [ ] pendente |
+
+### Sugestoes
+
+| Metodo | Rota                              | Acesso      | Status      |
+|--------|-----------------------------------|-------------|-------------|
+| POST   | `/api/sugestoes`                  | Autenticado | [x]          |
+| GET    | `/api/sugestoes`                  | Autenticado | [x]          |
+| GET    | `/api/sugestoes/{id}`             | Autenticado | [x]          |
+| PUT    | `/api/sugestoes/{id}/status`      | ADMIN       | [ ] pendente |
+| DELETE | `/api/sugestoes/{id}`             | Autenticado | [ ] pendente |
+
+### Legenda
+
+| Simbolo | Significado                    |
+|---------|--------------------------------|
+| [x]     | Implementado e disponivel      |
+| [ ]     | Pendente de implementacao      |
 
 ## Como Executar
 
