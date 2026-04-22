@@ -9,6 +9,10 @@ import com.projetopoo.mytickets.model.dtos.AgendamentoResponseDTO;
 import com.projetopoo.mytickets.repository.AgendamentoRepository;
 import com.projetopoo.mytickets.repository.EventoRepository;
 import com.projetopoo.mytickets.repository.UsuarioRepository;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import com.projetopoo.mytickets.security.CustomUserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,6 +62,30 @@ public class AgendamentoService {
     public Agendamento buscarPorId(Long id) {
         return agendamentoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Agendamento não encontrado com ID: " + id));
+    }
+
+    @Transactional
+    public void excluirAgendamento(Long id) {
+        Agendamento agendamento = agendamentoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Agendamento não encontrado com ID: " + id));
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth != null && auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isAdmin) {
+            if (auth != null && auth.getPrincipal() instanceof CustomUserDetails) {
+                CustomUserDetails principal = (CustomUserDetails) auth.getPrincipal();
+                Long currentUserId = principal.getUsuario().getIdUsuario();
+                if (agendamento.getUser() == null || !agendamento.getUser().getIdUsuario().equals(currentUserId)) {
+                    throw new AccessDeniedException("Você não tem permissão para excluir este agendamento.");
+                }
+            } else {
+                throw new AccessDeniedException("Acesso negado.");
+            }
+        }
+
+        agendamentoRepository.delete(agendamento);
     }
 
     public AgendamentoResponseDTO toResponseDTO(Agendamento a) {

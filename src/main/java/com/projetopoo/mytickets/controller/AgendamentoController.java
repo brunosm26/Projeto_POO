@@ -38,4 +38,10 @@ public class AgendamentoController {
     public AgendamentoResponseDTO criar(@Valid @RequestBody AgendamentoDTO dto) {
         return service.toResponseDTO(service.criarAgendamento(dto));
     }
+
+    @DeleteMapping("/{idAgendamento}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable Long idAgendamento) {
+        service.excluirAgendamento(idAgendamento);
+    }
 }

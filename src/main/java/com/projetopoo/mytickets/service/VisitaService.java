@@ -104,4 +104,28 @@ public class VisitaService {
                 v.getAuthorizer() != null ? v.getAuthorizer().getName() : null
         );
     }
+
+    @Transactional
+    public void excluirVisita(Long id) {
+        Visita visita = visitaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Visita não encontrada com ID: " + id));
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth != null && auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isAdmin) {
+            if (auth != null && auth.getPrincipal() instanceof CustomUserDetails) {
+                CustomUserDetails principal = (CustomUserDetails) auth.getPrincipal();
+                Long currentUserId = principal.getUsuario().getIdUsuario();
+                if (visita.getRequester() == null || !visita.getRequester().getIdUsuario().equals(currentUserId)) {
+                    throw new AccessDeniedException("Você não tem permissão para excluir esta visita.");
+                }
+            } else {
+                throw new AccessDeniedException("Acesso negado.");
+            }
+        }
+
+        visitaRepository.delete(visita);
+    }
 }

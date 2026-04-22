@@ -8,6 +8,8 @@ import com.projetopoo.mytickets.model.dtos.SugestaoResponseDTO;
 import com.projetopoo.mytickets.repository.SugestaoRepository;
 import com.projetopoo.mytickets.repository.UsuarioRepository;
 import com.projetopoo.mytickets.security.CustomUserDetails;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,5 +66,28 @@ public class SugestaoService {
                 s.getStatus(),
                 s.getCreator() != null ? s.getCreator().getName() : null
         );
+    }
+    @Transactional
+    public void excluirSugestao(Long id) {
+        Sugestao sugestao = sugestaoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Sugestão não encontrada com ID: " + id));
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth != null && auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isAdmin) {
+            if (auth != null && auth.getPrincipal() instanceof CustomUserDetails) {
+                CustomUserDetails principal = (CustomUserDetails) auth.getPrincipal();
+                Long currentUserId = principal.getUsuario().getIdUsuario();
+                if (sugestao.getCreator() == null || !sugestao.getCreator().getIdUsuario().equals(currentUserId)) {
+                    throw new AccessDeniedException("Você não tem permissão para excluir esta sugestão.");
+                }
+            } else {
+                throw new AccessDeniedException("Acesso negado.");
+            }
+        }
+
+        sugestaoRepository.delete(sugestao);
     }
 }
