@@ -1,6 +1,7 @@
 package com.projetopoo.mytickets.controller;
 
 import com.projetopoo.mytickets.model.dtos.EventoDTO;
+import com.projetopoo.mytickets.model.enums.EventCategory;
 import com.projetopoo.mytickets.service.EventoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -20,8 +21,8 @@ public class EventoController {
     }
 
     @GetMapping
-    public List<EventoDTO> listar() {
-        return service.listarEventos().stream()
+    public List<EventoDTO> listar(@RequestParam(required = false) EventCategory category) {
+        return service.listarEventos(category).stream()
                 .map(service::toDTO)
                 .toList();
     }

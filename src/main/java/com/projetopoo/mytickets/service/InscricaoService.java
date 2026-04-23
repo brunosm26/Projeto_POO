@@ -10,6 +10,7 @@ import com.projetopoo.mytickets.repository.EventoRepository;
 import com.projetopoo.mytickets.repository.InscricaoRepository;
 import com.projetopoo.mytickets.repository.UsuarioRepository;
 import com.projetopoo.mytickets.security.CustomUserDetails;
+import com.projetopoo.mytickets.security.SecurityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,13 +24,16 @@ public class InscricaoService {
     private final InscricaoRepository inscricaoRepository;
     private final UsuarioRepository usuarioRepository;
     private final EventoRepository eventoRepository;
+    private final SecurityUtils securityUtils;
 
     public InscricaoService(InscricaoRepository inscricaoRepository,
                             UsuarioRepository usuarioRepository,
-                            EventoRepository eventoRepository) {
+                            EventoRepository eventoRepository,
+                            SecurityUtils securityUtils) {
         this.inscricaoRepository = inscricaoRepository;
         this.usuarioRepository = usuarioRepository;
         this.eventoRepository = eventoRepository;
+        this.securityUtils = securityUtils;
     }
 
     @Transactional
@@ -67,5 +71,16 @@ public class InscricaoService {
         var userDetails = (CustomUserDetails) authentication.getPrincipal();
         Long userId = userDetails.getUsuario().getIdUsuario();
         return inscricaoRepository.findByUser_IdUsuario(userId);
+    }
+
+    @Transactional
+    public void excluirInscricao(Long id) {
+        Inscricao inscricao = inscricaoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Inscrição não encontrada com ID: " + id));
+        securityUtils.verifyOwnership(
+                inscricao.getUser() != null ? inscricao.getUser().getIdUsuario() : null,
+                "Você não tem permissão para excluir esta inscrição."
+        );
+        inscricaoRepository.delete(inscricao);
     }
 }

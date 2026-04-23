@@ -7,26 +7,25 @@ import com.projetopoo.mytickets.model.dtos.VisitaDTO;
 import com.projetopoo.mytickets.model.dtos.VisitaResponseDTO;
 import com.projetopoo.mytickets.repository.UsuarioRepository;
 import com.projetopoo.mytickets.repository.VisitaRepository;
+import com.projetopoo.mytickets.security.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.access.AccessDeniedException;
-import com.projetopoo.mytickets.security.CustomUserDetails;
 
 @Service
 public class VisitaService {
 
     private final VisitaRepository visitaRepository;
     private final UsuarioRepository usuarioRepository;
+    private final SecurityUtils securityUtils;
 
     public VisitaService(VisitaRepository visitaRepository,
-                         UsuarioRepository usuarioRepository) {
+                         UsuarioRepository usuarioRepository,
+                         SecurityUtils securityUtils) {
         this.visitaRepository = visitaRepository;
         this.usuarioRepository = usuarioRepository;
+        this.securityUtils = securityUtils;
     }
 
     @Transactional
@@ -50,49 +49,36 @@ public class VisitaService {
 
     @Transactional(readOnly = true)
     public List<Visita> listarVisitas() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAdmin = auth != null && auth.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-
         List<Visita> todasVisitas = visitaRepository.findAll();
-
-        if (isAdmin) {
+        if (securityUtils.isAdmin()) {
             return todasVisitas;
         }
-
-        if (auth != null && auth.getPrincipal() instanceof CustomUserDetails) {
-            CustomUserDetails principal = (CustomUserDetails) auth.getPrincipal();
-            Long currentUserId = principal.getUsuario().getIdUsuario();
-            return todasVisitas.stream()
-                    .filter(v -> v.getRequester() != null && v.getRequester().getIdUsuario().equals(currentUserId))
-                    .toList();
-        }
-
-        throw new AccessDeniedException("Acesso negado.");
+        Long currentUserId = securityUtils.getCurrentUserId();
+        return todasVisitas.stream()
+                .filter(v -> v.getRequester() != null && v.getRequester().getIdUsuario().equals(currentUserId))
+                .toList();
     }
 
     @Transactional(readOnly = true)
     public Visita buscarPorId(Long id) {
         Visita visita = visitaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Visita não encontrada com ID: " + id));
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAdmin = auth != null && auth.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-
-        if (!isAdmin) {
-            if (auth != null && auth.getPrincipal() instanceof CustomUserDetails) {
-                CustomUserDetails principal = (CustomUserDetails) auth.getPrincipal();
-                Long currentUserId = principal.getUsuario().getIdUsuario();
-                if (visita.getRequester() == null || !visita.getRequester().getIdUsuario().equals(currentUserId)) {
-                    throw new AccessDeniedException("Você não tem permissão para visualizar esta visita.");
-                }
-            } else {
-                 throw new AccessDeniedException("Acesso negado.");
-            }
-        }
-
+        securityUtils.verifyOwnership(
+                visita.getRequester() != null ? visita.getRequester().getIdUsuario() : null,
+                "Você não tem permissão para visualizar esta visita."
+        );
         return visita;
+    }
+
+    @Transactional
+    public void excluirVisita(Long id) {
+        Visita visita = visitaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Visita não encontrada com ID: " + id));
+        securityUtils.verifyOwnership(
+                visita.getRequester() != null ? visita.getRequester().getIdUsuario() : null,
+                "Você não tem permissão para excluir esta visita."
+        );
+        visitaRepository.delete(visita);
     }
 
     public VisitaResponseDTO toResponseDTO(Visita v) {

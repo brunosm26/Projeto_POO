@@ -5,9 +5,11 @@ import com.projetopoo.mytickets.model.Evento;
 import com.projetopoo.mytickets.model.TipoEvento;
 import com.projetopoo.mytickets.model.Usuario;
 import com.projetopoo.mytickets.model.dtos.EventoDTO;
+import com.projetopoo.mytickets.model.enums.EventCategory;
 import com.projetopoo.mytickets.repository.EventoRepository;
 import com.projetopoo.mytickets.repository.TipoEventoRepository;
 import com.projetopoo.mytickets.repository.UsuarioRepository;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +23,8 @@ public class EventoService {
     private final TipoEventoRepository tipoEventoRepository;
 
     public EventoService(EventoRepository eventoRepository,
-                         UsuarioRepository usuarioRepository,
-                         TipoEventoRepository tipoEventoRepository) {
+            UsuarioRepository usuarioRepository,
+            TipoEventoRepository tipoEventoRepository) {
         this.eventoRepository = eventoRepository;
         this.usuarioRepository = usuarioRepository;
         this.tipoEventoRepository = tipoEventoRepository;
@@ -45,13 +47,15 @@ public class EventoService {
 
         if (dto.creatorId() != null) {
             Usuario criador = usuarioRepository.findById(dto.creatorId())
-                    .orElseThrow(() -> new EntityNotFoundException("Criador não encontrado com ID: " + dto.creatorId()));
+                    .orElseThrow(
+                            () -> new EntityNotFoundException("Criador não encontrado com ID: " + dto.creatorId()));
             evento.setCreator(criador);
         }
 
         if (dto.eventTypeId() != null) {
             TipoEvento tipo = tipoEventoRepository.findById(dto.eventTypeId())
-                    .orElseThrow(() -> new EntityNotFoundException("Tipo de evento não encontrado com ID: " + dto.eventTypeId()));
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            "Tipo de evento não encontrado com ID: " + dto.eventTypeId()));
             evento.setEventType(tipo);
         }
 
@@ -59,7 +63,10 @@ public class EventoService {
     }
 
     @Transactional(readOnly = true)
-    public List<Evento> listarEventos() {
+    public List<Evento> listarEventos(EventCategory category) {
+        if (category != null) {
+            return eventoRepository.findByCategory(category);
+        }
         return eventoRepository.findAll();
     }
 
@@ -141,7 +148,6 @@ public class EventoService {
                 e.getCategory(),
                 e.getCreatedAt(),
                 e.getUpdatedAt(),
-                e.getImageUrl()
-        );
+                e.getImageUrl());
     }
 }

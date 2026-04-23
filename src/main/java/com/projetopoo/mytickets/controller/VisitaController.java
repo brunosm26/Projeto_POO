@@ -36,4 +36,10 @@ public class VisitaController {
     public VisitaResponseDTO criar(@Valid @RequestBody VisitaDTO dto) {
         return service.toResponseDTO(service.criarVisita(dto));
     }
+
+    @DeleteMapping("/{idVisita}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable Long idVisita) {
+        service.excluirVisita(idVisita);
+    }
 }

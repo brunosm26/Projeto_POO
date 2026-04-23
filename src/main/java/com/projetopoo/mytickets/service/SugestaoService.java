@@ -8,6 +8,7 @@ import com.projetopoo.mytickets.model.dtos.SugestaoResponseDTO;
 import com.projetopoo.mytickets.repository.SugestaoRepository;
 import com.projetopoo.mytickets.repository.UsuarioRepository;
 import com.projetopoo.mytickets.security.CustomUserDetails;
+import com.projetopoo.mytickets.security.SecurityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,11 +20,14 @@ public class SugestaoService {
 
     private final SugestaoRepository sugestaoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final SecurityUtils securityUtils;
 
     public SugestaoService(SugestaoRepository sugestaoRepository,
-                           UsuarioRepository usuarioRepository) {
+                           UsuarioRepository usuarioRepository,
+                           SecurityUtils securityUtils) {
         this.sugestaoRepository = sugestaoRepository;
         this.usuarioRepository = usuarioRepository;
+        this.securityUtils = securityUtils;
     }
 
     @Transactional
@@ -53,6 +57,17 @@ public class SugestaoService {
     public Sugestao buscarPorId(Long id) {
         return sugestaoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Sugestão não encontrada com ID: " + id));
+    }
+
+    @Transactional
+    public void excluirSugestao(Long id) {
+        Sugestao sugestao = sugestaoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Sugestão não encontrada com ID: " + id));
+        securityUtils.verifyOwnership(
+                sugestao.getCreator() != null ? sugestao.getCreator().getIdUsuario() : null,
+                "Você não tem permissão para excluir esta sugestão."
+        );
+        sugestaoRepository.delete(sugestao);
     }
 
     public SugestaoResponseDTO toResponseDTO(Sugestao s) {

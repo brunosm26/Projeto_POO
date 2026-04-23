@@ -36,4 +36,10 @@ public class SugestaoController {
     public SugestaoResponseDTO criar(@Valid @RequestBody SugestaoDTO dto) {
         return service.toResponseDTO(service.criarSugestao(dto));
     }
+
+    @DeleteMapping("/{idSugestao}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable Long idSugestao) {
+        service.excluirSugestao(idSugestao);
+    }
 }

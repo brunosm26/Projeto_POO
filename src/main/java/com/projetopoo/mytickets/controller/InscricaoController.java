@@ -58,4 +58,10 @@ public class InscricaoController {
                 ))
                 .toList();
     }
+
+    @DeleteMapping("/{idInscricao}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable Long idInscricao) {
+        service.excluirInscricao(idInscricao);
+    }
 }

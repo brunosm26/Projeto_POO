@@ -244,12 +244,14 @@ chmod +x mvnw
 - [x] Documentacao da API disponivel em `/docs` (Scalar UI)
 - [x] Proteger `GET /api/usuarios` — atualmente publico sem autenticacao
 - [x] Refatorar `Visita`: unificar `date` + `time` em `scheduled_at`
+- [x] Adicionar `MockDataInitializer` — cria admin e user padrao ao subir em perfil `dev`
+- [x] Implementar `GET /api/eventos?categoria=` — filtro de eventos por categoria
 
 ### Pendente
-- [ ] Implementar `GET /api/eventos?categoria=` — filtro de eventos por categoria
+
 - [ ] Implementar atualizacao de status de Sugestao (aprovar/ignorar) — endpoint ADMIN
 - [ ] Revisar cascade de entidades
-- [ ] Adicionar DELETE para Agendamento, Inscricao, Visita e Sugestao
+- [x] Adicionar DELETE para Agendamento, Inscricao, Visita e Sugestao
 - [ ] Atualizar CONTRIBUTING.md com stack e estrutura atual (Supabase, novos DTOs, etc.)
 - [ ] Unificar Visita e Agendamento? (código duplicado?, ou eu não entendi a regra de negócio)
 
