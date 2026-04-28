@@ -128,6 +128,8 @@ Authorization: Bearer {token}
 
 <img width="1123" alt="issues" src="https://github.com/user-attachments/assets/74aeece3-3699-425c-a1a0-1f3e1261ed5e" />
 
+<img width="690" height="610" alt="story users" src="https://github.com/user-attachments/assets/9602f689-7ed6-4336-967e-cb4dacf60b89" />
+
 ---
 
 ## Equipe
