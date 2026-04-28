@@ -38,6 +38,8 @@ Nesta primeira etapa, focamos na definição do escopo, mapeamento das necessida
 
 ### 2. Screencast Atualizado:
 [screencast - entrega 03](https://youtu.be/prxKDB69Yo0)
-   ### 2.1 Storyusers implementadas - 
+* **Storyusers implementadas
    [2 storyusers implementadas](https://docs.google.com/document/d/1c6c0XFHAeVdOe4d9dGdpWpzAMPqI-bRmF2OMzn7V9o8/edit?usp=sharing)
+   <img width="690" height="610" alt="image" src="https://github.com/user-attachments/assets/9602f689-7ed6-4336-967e-cb4dacf60b89" />
+
 
