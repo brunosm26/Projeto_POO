@@ -120,6 +120,7 @@ public class InscricaoService {
         return new InscricaoResponseDTO(
                 inscricao.getIdInscricao(),
                 inscricao.getUser().getName(),
+                inscricao.getEvent().getIdEvento(),
                 inscricao.getEvent().getEventName(),
                 inscricao.getRegistrationAt(),
                 inscricao.getVisitorCount()
