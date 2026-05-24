@@ -36,6 +36,30 @@ chmod +x mvnw
 
 ---
 
+## Testes
+
+O projeto possui testes unitários nos services principais usando **JUnit 5** e **Mockito**, seguindo o padrão Arrange-Act-Assert.
+
+| Classe de teste | O que cobre |
+|---|---|
+| `UsuarioServiceTest` | Registro, duplicidade de e-mail, busca por ID, atualização |
+| `EventoServiceTest` | Criação, busca por ID, deleção, admin duplicado |
+| `InscricaoServiceTest` | Usuário/evento não encontrado, inscrição duplicada, capacidade esgotada |
+
+Para rodar os testes:
+
+```bash
+./mvnw test
+```
+
+Para rodar apenas os testes unitários dos services:
+
+```bash
+./mvnw test -Dtest="UsuarioServiceTest,EventoServiceTest,InscricaoServiceTest"
+```
+
+---
+
 ## Endpoints
 
 Após o login, envie o token em todas as requisições autenticadas:
